@@ -1,0 +1,1 @@
+df = pd.read_csv('data/hh_vacancies_final_clean.csv.csv', encoding='utf-8')
