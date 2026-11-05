@@ -1,0 +1,86 @@
+@startuml
+left to right direction
+skinparam backgroundColor white
+skinparam dpi 170
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam roundCorner 20
+skinparam nodesep 22
+skinparam ranksep 1
+skinparam ArrowColor #2F5AA8
+skinparam ArrowThickness 2.2
+
+skinparam rectangle {
+  BorderColor #5BC0CE
+  BorderThickness 2
+  BackgroundColor #FFFFFF
+  FontColor #1F2A44
+  FontSize 15
+}
+skinparam label {
+  FontSize 1
+}
+skinparam package {
+  BorderColor #2F5AA8
+  BorderThickness 2
+  BackgroundColor #F3F8FC
+  FontColor #2F5AA8
+  FontSize 19
+  FontStyle bold
+}
+skinparam actor {
+  BorderColor #2F5AA8
+  BackgroundColor #5BC0CE
+  FontColor #1F2A44
+  FontSize 15
+}
+
+actor "Пользователь" as user
+label "<size:15><color:#FFFFFF>______</color></size>" as sp1
+label " " as uiIn
+package "Интерфейс" {
+  rectangle "<b><color:#2F5AA8>Главная</color></b>\nкарта и сведения о городах" as main
+  rectangle "<b><color:#2F5AA8>Подбор города</color></b>\nсоискатель, работодатель" as pick
+  rectangle "<b><color:#2F5AA8>Сравнение</color></b>\n2–3 города" as cmp
+}
+label " " as uiOut
+label "<size:15><color:#FFFFFF>__________</color></size>" as sp2
+label " " as calcIn
+package "Анализ данных" {
+  rectangle "<b><color:#2F5AA8>Показатели</color></b>\nзарплата, спрос, конкуренция" as metrics
+  rectangle "<b><color:#2F5AA8>Рейтинг и вывод</color></b>\nпо условиям пользователя" as rating
+  rectangle "<b><color:#2F5AA8>Отчёт</color></b>\nграфики и PDF" as report
+}
+label " " as calcOut
+label "<size:15><color:#FFFFFF>__________</color></size>" as sp3
+label " " as dataIn
+package "Данные" {
+  rectangle "<b><color:#2F5AA8>Импорт CSV</color></b>\nвакансии hh.ru" as csv
+  rectangle "<b><color:#2F5AA8>База SQLite</color></b>\nвакансии, города, профессии" as db
+}
+
+cmp -[hidden]right- pick
+pick -[hidden]right- main
+report -[hidden]right- rating
+rating -[hidden]right- metrics
+db -[hidden]right- csv
+
+user -[hidden]-> sp1
+sp1 -[hidden]-> uiIn
+uiIn -[hidden]-> pick
+pick -[hidden]-> uiOut
+uiOut -[hidden]-> sp2
+sp2 -[hidden]-> calcIn
+calcIn -[hidden]-> rating
+rating -[hidden]-> calcOut
+calcOut -[hidden]-> sp3
+sp3 -[hidden]-> dataIn
+dataIn -[hidden]-> csv
+dataIn -[hidden]-> db
+
+user --> uiIn : запрос
+user <.. uiIn : графики, отчёты
+uiOut --> calcIn : условия
+uiOut <.. calcIn : результаты
+calcOut <-- dataIn : вакансии
+@enduml
